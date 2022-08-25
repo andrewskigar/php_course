@@ -1,0 +1,15 @@
+{
+  "name": "app/http_foundation_demo",
+  "description": "",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Andrew Skigar",
+      "email": "andrew.skigar@gmail.com"
+    }
+  ],
+  "require": {
+    "symfony/http-foundation": "^6.1"
+  }
+}
