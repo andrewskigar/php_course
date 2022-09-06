@@ -87,7 +87,7 @@ class TextStatistics
     {
         $onlyWords = [];
 
-        $allWords = preg_split('/(?P<words>\s+)/u', $text, -1, PREG_SPLIT_NO_EMPTY);
+        $allWords = preg_split('/(?P<words>[\s,.!?]+)/u', $text, -1, PREG_SPLIT_NO_EMPTY);
         if (count($allWords)) {
             foreach ($allWords as $word) {
                 if (mb_strlen($word) > 2) {
@@ -106,23 +106,17 @@ class TextStatistics
 
     protected function numberOfCharacters(): void
     {
-        if ($this->numberOfCharacters === -1) {
-            $this->numberOfCharacters = count($this->characters);
-        }
+        $this->numberOfCharacters = count($this->characters);
     }
 
     protected function numberOfWords(): void
     {
-        if ($this->numberOfWords === -1) {
-            $this->numberOfWords = count($this->words);
-        }
+        $this->numberOfWords = count($this->words);
     }
 
     protected function numberOfSentences(): void
     {
-        if ($this->numberOfSentences === -1) {
-            $this->numberOfSentences = count($this->sentences);
-        }
+        $this->numberOfSentences = count($this->sentences);
     }
 
     protected function isPalindrome(string $text): bool
@@ -132,155 +126,138 @@ class TextStatistics
 
     protected function palindromeWords(): void
     {
-        if ($this->numberOfPalindromeWords === -1) {
-            $palindromeWords = [];
+        $palindromeWords = [];
 
-            $this->numberOfPalindromeWords = 0;
-            foreach ($this->words as $word) {
-                if ($this->isPalindrome($word)) {
-                    $this->numberOfPalindromeWords++;
-                    $palindromeWords[$word] = mb_strlen($word);
-                }
+        $this->numberOfPalindromeWords = 0;
+
+        foreach ($this->words as $word) {
+            if ($this->isPalindrome($word)) {
+                $this->numberOfPalindromeWords++;
+                $palindromeWords[$word] = mb_strlen($word);
             }
+        }
 
-            if (count($palindromeWords) > 0) {
-                uasort($palindromeWords, function($a, $b) {
-                    return $b - $a;
-                });
+        if (count($palindromeWords) > 0) {
+            uasort($palindromeWords, function($a, $b) {
+                return $b - $a;
+            });
 
-                $this->topLongestPalindromeWords = array_keys(array_slice($palindromeWords, 0 ,10, true));
-            }
+            $this->topLongestPalindromeWords = array_keys(array_slice($palindromeWords, 0 ,10, true));
         }
     }
 
     protected function frequencyOfCharacters(): void
     {
-        if (count($this->frequencyOfCharacters) === 0) {
-            $characters = [];
-            foreach ($this->characters as $character) {
-                if (! isset($characters[$character])) {
-                    $characters[(string) $character] = 1;
-                } else {
-                    $characters[(string) $character]++;
-                }
+        $characters = [];
+        foreach ($this->characters as $character) {
+            if (! isset($characters[$character])) {
+                $characters[(string) $character] = 1;
+            } else {
+                $characters[(string) $character]++;
             }
-
-            uasort($characters, function($a, $b) {
-                return $b - $a;
-            });
-
-            $this->frequencyOfCharacters = $characters;
         }
+
+        uasort($characters, function($a, $b) {
+            return $b - $a;
+        });
+
+        $this->frequencyOfCharacters = $characters;
     }
 
     protected function averageWordLength(): void
     {
-        if ($this->averageWordLength === -1) {
-            $wordsCount = 0;
-            $total = 0;
-            foreach ($this->words as $word) {
-                $total += mb_strlen($word);
-                $wordsCount++;
-            }
-            $this->averageWordLength = (int) ($total / $wordsCount);
+        $wordsCount = 0;
+        $total = 0;
+        foreach ($this->words as $word) {
+            $total += mb_strlen($word);
+            $wordsCount++;
         }
+        $this->averageWordLength = (int) ($total / $wordsCount);
     }
 
     protected function averageNumberWordsInSentence(): void
     {
-        if ($this->averageNumberWordsInSentence === -1) {
-            $sentencesCount = 0;
-            $total = 0;
-            foreach ($this->sentences as $sentence) {
-                $total += count($this->splitByWords($sentence));
-                $sentencesCount++;
-            }
-            $this->averageNumberWordsInSentence = (int) ($total / $sentencesCount);
+        $sentencesCount = 0;
+        $total = 0;
+        foreach ($this->sentences as $sentence) {
+            $total += count($this->splitByWords($sentence));
+            $sentencesCount++;
         }
+        $this->averageNumberWordsInSentence = (int) ($total / $sentencesCount);
     }
 
     protected function topUsedWords(): void
     {
-        if (count($this->topUsedWords) === 0) {
-            $wordsCount = [];
-            foreach ($this->words as $word) {
-                if (! isset($wordsCount[$word])) {
-                    $wordsCount[(string) $word] = 1;
-                } else {
-                    $wordsCount[(string) $word]++;
-                }
+        $wordsCount = [];
+        foreach ($this->words as $word) {
+            if (! isset($wordsCount[$word])) {
+                $wordsCount[(string) $word] = 1;
+            } else {
+                $wordsCount[(string) $word]++;
             }
-
-            uasort($wordsCount, function($a, $b) {
-               return $b - $a;
-            });
-
-            $this->topUsedWords = array_keys(array_slice($wordsCount, 0 ,10, true));
         }
+
+        uasort($wordsCount, function($a, $b) {
+           return $b - $a;
+        });
+
+        $this->topUsedWords = array_keys(array_slice($wordsCount, 0 ,10, true));
     }
 
     protected function topLongestWords(): void
     {
-        if (count($this->topLongestWords) === 0) {
-            $words = [];
-            foreach ($this->words as $word) {
-                $words[(string) $word] = mb_strlen($word);
-            }
-
-            uasort($words, function($a, $b) {
-                return $b - $a;
-            });
-
-            $this->topLongestWords = array_keys(array_slice($words, 0 ,10, true));
+        $words = [];
+        foreach ($this->words as $word) {
+            $words[(string) $word] = mb_strlen($word);
         }
+
+        uasort($words, function($a, $b) {
+            return $b - $a;
+        });
+
+        $this->topLongestWords = array_keys(array_slice($words, 0 ,10, true));
     }
 
     protected function topShortestWords(): void
     {
-        if (count($this->topShortestWords) === 0) {
-            $words = [];
-            foreach ($this->words as $word) {
-                $words[(string) $word] = mb_strlen($word);
-            }
-
-            uasort($words, function($a, $b) {
-                return $a - $b;
-            });
-
-            $this->topShortestWords = array_keys(array_slice($words, 0 ,10, true));
+        $words = [];
+        foreach ($this->words as $word) {
+            $words[(string) $word] = mb_strlen($word);
         }
+
+        uasort($words, function($a, $b) {
+            return $a - $b;
+        });
+
+        $this->topShortestWords = array_keys(array_slice($words, 0 ,10, true));
     }
 
     protected function topLongestSentences(): void
     {
-        if (count($this->topLongestSentences) === 0) {
-            $sentences = [];
-            foreach ($this->sentences as $sentence) {
-                $sentences[(string) $sentence] = mb_strlen($sentence);
-            }
-
-            uasort($sentences, function($a, $b) {
-                return $b - $a;
-            });
-
-            $this->topLongestSentences = array_keys(array_slice($sentences, 0 ,10, true));
+        $sentences = [];
+        foreach ($this->sentences as $sentence) {
+            $sentences[(string) $sentence] = mb_strlen($sentence);
         }
+
+        uasort($sentences, function($a, $b) {
+            return $b - $a;
+        });
+
+        $this->topLongestSentences = array_keys(array_slice($sentences, 0 ,10, true));
     }
 
     protected function topShortestSentences(): void
     {
-        if (count($this->topShortestSentences) === 0) {
-            $sentences = [];
-            foreach ($this->sentences as $sentence) {
-                $sentences[(string) $sentence] = mb_strlen($sentence);
-            }
-
-            uasort($sentences, function($a, $b) {
-                return $a - $b;
-            });
-
-            $this->topShortestSentences = array_keys(array_slice($sentences, 0 ,10, true));
+        $sentences = [];
+        foreach ($this->sentences as $sentence) {
+            $sentences[(string) $sentence] = mb_strlen($sentence);
         }
+
+        uasort($sentences, function($a, $b) {
+            return $a - $b;
+        });
+
+        $this->topShortestSentences = array_keys(array_slice($sentences, 0 ,10, true));
     }
 
     protected function reverseText(): void
