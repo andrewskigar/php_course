@@ -1,0 +1,20 @@
+{
+  "name": "andrew_skigar/list_loop_length",
+  "description": "",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Andrew Skigar",
+      "email": "andrew.skigar@example.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.1.0"
+  }
+}
